@@ -1,10 +1,10 @@
 package pathedge
 
 import (
-	"os"
-	"log"
-	"io/ioutil"
 	"encoding/xml"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 type Graph map[int][]TrainLeg

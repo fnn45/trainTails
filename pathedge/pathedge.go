@@ -1,12 +1,12 @@
 package pathedge
 
 import (
+	"bytes"
 	"fmt"
 	"sort"
-	"time"
-	"strings"
 	"strconv"
-	"bytes"
+	"strings"
+	"time"
 )
 
 type OutCome struct {
@@ -23,7 +23,6 @@ type PathEdge struct {
 type DurationSortablePathSet []PathEdge
 
 type PriceSortablePathSet []PathEdge
-
 
 func (p *PathEdge) Path(worklist chan PathEdge, g *Graph, endpoint int) {
 	edges := (*g)[p.keys[len(p.keys)-1]]
@@ -72,8 +71,6 @@ func elemInArray(a int, list []int) bool {
 	}
 	return false
 }
-
-
 
 func NewPathEdge(out OutCome, keys []int, nodes map[int]TrainLeg) PathEdge {
 	return PathEdge{OutCome: out, keys: keys, nodes: nodes}
@@ -127,7 +124,6 @@ func ParseTime(t string) (time.Duration, error) {
 	return time.Duration(hours)*time.Hour + time.Duration(mins)*time.Minute + time.Duration(secs)*time.Second, nil
 }
 
-
 func (d DurationSortablePathSet) Len() int {
 	return len(d)
 }
@@ -156,7 +152,7 @@ func (d DurationSortablePathSet) String() string {
 	var buffer bytes.Buffer
 	splitLine := "-----------------------------------------------------\n"
 	data := "TrainId: %v (DepId: %v, ArrId: %v)\n"
-	buffer.WriteString("Results  :\n\n")
+	buffer.WriteString("\n")
 	buffer.WriteString("<<< --------- sorted by duration  --------->>>\n\n")
 	for i := 0; i <= len(d)-1; i++ {
 		buffer.WriteString(
@@ -176,7 +172,7 @@ func (p PriceSortablePathSet) String() string {
 	var buffer bytes.Buffer
 	splitLine := "-----------------------------------------------------\n"
 	data := "TrainId: %v (DepId: %v, ArrId: %v)\n"
-	buffer.WriteString("Results  :\n\n")
+	buffer.WriteString("\n")
 	buffer.WriteString("<<< --------- sorted by price  --------->>>\n\n")
 	for i := 0; i <= len(p)-1; i++ {
 		buffer.WriteString(

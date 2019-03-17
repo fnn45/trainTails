@@ -2,37 +2,35 @@ package main
 
 import (
 	"./pathedge"
+	"./permutations"
+
 	"flag"
-	"log"
+	"fmt"
 	"time"
 )
 
 func main() {
 
-	startpointId := flag.Int("start", 1902, "starting point")
-	endpointId := flag.Int("end", 1929, "end point")
 	displayResCount := flag.Int("display", 3, "the number of displayed results")
 
 	flag.Parse()
 
-	var results []pathedge.PathEdge
-	worklist := make(chan pathedge.PathEdge, 10)
+	for p := range permutations.PairsGenerator(permutations.KeysFromGraph(pathedge.RelatedGraph)) {
+		var results []pathedge.PathEdge
+		worklist := make(chan pathedge.PathEdge, 10)
+		startpointId, endpointId := p[0].(int), p[1].(int)
 
-	if _, ok := pathedge.RelatedGraph[*startpointId]; !ok {
-		log.Fatal("Enter the correct starting id")
+		startpoint := pathedge.NewPathEdge(pathedge.OutCome{
+			time.Duration(0), 0},
+			[]int{startpointId}, make(map[int]pathedge.TrainLeg))
+
+		startpoint.Path(worklist, &pathedge.RelatedGraph, endpointId)
+
+		for p := range worklist {
+			results = append(results, p)
+		}
+		fmt.Printf("############   StartId: %v  ####  FinishId: %v   ###############\n", startpointId, endpointId)
+		pathedge.ShowResult(results, *displayResCount)
 	}
-	if _, ok := pathedge.RelatedGraph[*endpointId]; !ok {
-		log.Fatal("Enter the correct finish id")
-	}
 
-	startpoint := pathedge.NewPathEdge(pathedge.OutCome{
-		time.Duration(0), 0},
-		[]int{*startpointId}, make(map[int]pathedge.TrainLeg))
-
-	startpoint.Path(worklist, &pathedge.RelatedGraph, *endpointId)
-
-	for p := range worklist {
-		results = append(results, p)
-	}
-	pathedge.ShowResult(results, *displayResCount)
 }
