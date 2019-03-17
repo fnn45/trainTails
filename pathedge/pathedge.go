@@ -9,6 +9,22 @@ import (
 	"bytes"
 )
 
+type OutCome struct {
+	Duration time.Duration
+	Price    float32
+}
+
+type PathEdge struct {
+	OutCome
+	keys  []int
+	nodes map[int]TrainLeg
+}
+
+type DurationSortablePathSet []PathEdge
+
+type PriceSortablePathSet []PathEdge
+
+
 func (p *PathEdge) Path(worklist chan PathEdge, g *Graph, endpoint int) {
 	edges := (*g)[p.keys[len(p.keys)-1]]
 
@@ -57,16 +73,7 @@ func elemInArray(a int, list []int) bool {
 	return false
 }
 
-type OutCome struct {
-	Duration time.Duration
-	Price    float32
-}
 
-type PathEdge struct {
-	OutCome
-	keys  []int
-	nodes map[int]TrainLeg
-}
 
 func NewPathEdge(out OutCome, keys []int, nodes map[int]TrainLeg) PathEdge {
 	return PathEdge{OutCome: out, keys: keys, nodes: nodes}
@@ -120,8 +127,6 @@ func ParseTime(t string) (time.Duration, error) {
 	return time.Duration(hours)*time.Hour + time.Duration(mins)*time.Minute + time.Duration(secs)*time.Second, nil
 }
 
-type DurationSortablePathSet []PathEdge
-type PriceSortablePathSet []PathEdge
 
 func (d DurationSortablePathSet) Len() int {
 	return len(d)

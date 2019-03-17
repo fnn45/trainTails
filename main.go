@@ -10,7 +10,7 @@ import (
 func main() {
 
 	startpointId := flag.Int("start", 1902, "starting point")
-	endpointId := flag.Int("end", 1902, "end point")
+	endpointId := flag.Int("end", 1929, "end point")
 	displayResCount := flag.Int("display", 3, "the number of displayed results")
 
 	flag.Parse()
